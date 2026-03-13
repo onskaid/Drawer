@@ -40,8 +40,14 @@ const hueStart = Math.random() * 360;
 const hueBases = Array.from({ length: 5 }, (_, i) => (hueStart + i * 72) % 360)
   .sort(() => Math.random() - 0.5);
 const rands = hueBases.map(h => randomColor(h));
-const bases = [...rands, '#ffffff', '#111111'];
-const columns = bases.map(b => [0, .2, .4, .6, .8].map(a => a === 0 ? b : lighten(b, a)));
+
+// グレースケール列: 黒→濃グレー→グレー→薄グレー→白
+const grayscale = ['#111111', '#444444', '#888888', '#c0c0c0', '#ffffff'];
+
+const columns = [
+  ...rands.map(b => [0, .2, .4, .6, .8].map(a => a === 0 ? b : lighten(b, a))),
+  grayscale,
+];
 
 // ═══════════════════════════════════════════════
 // CANVAS SIZES
@@ -108,7 +114,7 @@ function buildPalette(containerId) {
       sw.className = 'color-swatch';
       sw.style.background = color;
       if (isLight(color)) sw.classList.add('light');
-      if (ci === 6 && si === 0) sw.classList.add('active');
+      if (ci === 5 && si === 0) sw.classList.add('active'); // 黒をデフォルト選択
       sw.addEventListener('click', () => pickColor(color));
       col.appendChild(sw);
       allSwatches.push(sw);

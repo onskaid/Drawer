@@ -52,12 +52,6 @@ header {
   text-transform: uppercase;
   color: var(--text);
 }
-.tagline {
-  font-size: 9px;
-  letter-spacing: .08em;
-  color: var(--text-m);
-  margin-top: 2px;
-}
 .header-right { display: flex; gap: 8px; align-items: center; }
 
 .size-badge {
@@ -69,6 +63,19 @@ header {
   border-radius: 4px;
   padding: 3px 7px;
   letter-spacing: .04em;
+}
+
+.zoom-badge {
+  font-size: 9px;
+  font-family: 'DM Mono', monospace;
+  color: var(--text-m);
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  padding: 3px 7px;
+  letter-spacing: .04em;
+  min-width: 38px;
+  text-align: center;
 }
 
 .btn {
@@ -416,10 +423,12 @@ header {
   .tab-bar { display: none !important; }
   .mobile-panel { display: none !important; }
   .panel-overlay { display: none !important; }
+  .zoom-badge { display: none; } /* PC では非表示 */
 }
 @media (max-width: 767px) {
   .sidebar { display: none !important; }
   .tab-bar { display: block; }
   .mobile-panel { display: block; }
   .canvas-wrap { position: relative; }
+  #tabSettings { display: none; } /* スマホでSettingsタブ非表示 */
 }

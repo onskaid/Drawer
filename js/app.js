@@ -67,6 +67,13 @@ let strokeSize = 6;
 let isDrawing = false;
 let lastX = 0, lastY = 0, lastMidX = 0, lastMidY = 0;
 
+// ピンチズーム
+let zoomScale = 1.0;
+const ZOOM_MIN = 0.5;
+const ZOOM_MAX = 2.0;
+let pinchStartDist = 0;
+let pinchStartScale = 1.0;
+
 // ═══════════════════════════════════════════════
 // CANVAS SETUP
 // ═══════════════════════════════════════════════
@@ -94,9 +101,16 @@ function initCanvas(w, h) {
 
 function fitCanvas() {
   const wrap = document.getElementById('canvasWrap');
-  const scale = Math.min(wrap.clientWidth / canvas.width, wrap.clientHeight / canvas.height, 1);
-  canvas.style.width  = Math.floor(canvas.width  * scale) + 'px';
-  canvas.style.height = Math.floor(canvas.height * scale) + 'px';
+  const basScale = Math.min(wrap.clientWidth / canvas.width, wrap.clientHeight / canvas.height, 1);
+  const totalScale = basScale * zoomScale;
+  canvas.style.width  = Math.floor(canvas.width  * totalScale) + 'px';
+  canvas.style.height = Math.floor(canvas.height * totalScale) + 'px';
+  updateZoomBadge();
+}
+
+function updateZoomBadge() {
+  const badge = document.getElementById('zoomBadge');
+  if (badge) badge.textContent = Math.round(zoomScale * 100) + '%';
 }
 
 // ═══════════════════════════════════════════════
@@ -344,9 +358,45 @@ canvas.addEventListener('mousedown',  startDraw);
 canvas.addEventListener('mousemove',  doDraw);
 canvas.addEventListener('mouseup',    endDraw);
 canvas.addEventListener('mouseleave', endDraw);
-canvas.addEventListener('touchstart', startDraw, { passive: false });
-canvas.addEventListener('touchmove',  doDraw,    { passive: false });
-canvas.addEventListener('touchend',   endDraw);
+
+// タッチ：1本指=描画、2本指=ピンチズーム
+canvas.addEventListener('touchstart', e => {
+  if (openPanelId) { closePanel(); return; }
+  if (e.touches.length === 2) {
+    // ピンチ開始
+    isDrawing = false;
+    pinchStartDist = getPinchDist(e);
+    pinchStartScale = zoomScale;
+    e.preventDefault();
+  } else if (e.touches.length === 1) {
+    startDraw(e);
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+  if (e.touches.length === 2) {
+    // ピンチ中
+    e.preventDefault();
+    const dist = getPinchDist(e);
+    const ratio = dist / pinchStartDist;
+    zoomScale = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, pinchStartScale * ratio));
+    fitCanvas();
+  } else if (e.touches.length === 1) {
+    doDraw(e);
+  }
+}, { passive: false });
+
+canvas.addEventListener('touchend', e => {
+  if (e.touches.length < 2) {
+    endDraw();
+  }
+});
+
+function getPinchDist(e) {
+  const dx = e.touches[0].clientX - e.touches[1].clientX;
+  const dy = e.touches[0].clientY - e.touches[1].clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
 
 // ═══════════════════════════════════════════════
 // CLEAR & SAVE

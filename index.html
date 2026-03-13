@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>お絵かき</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <span class="logo">Draw Draw Drawer</span>
+  <div class="header-right">
+    <span class="size-badge" id="sizeBadge">1080 × 1080</span>
+    <button class="btn danger" id="clearBtn">Clear</button>
+    <button class="btn primary" id="saveBtn">↓ Save</button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="app-body" id="appBody">
+
+  <!-- PC SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div>
+      <div class="section-label">Color</div>
+      <div class="palette-wrap" id="pcPalette"></div>
+    </div>
+    <div>
+      <div class="section-label">Stroke</div>
+      <div class="stroke-dropdown">
+        <div class="stroke-trigger" id="strokeTrigger">
+          <div class="trigger-bar-wrap"><div class="stroke-bar" id="triggerBar"></div></div>
+          <span class="trigger-px" id="triggerPx"></span>
+          <span class="trigger-arrow">▾</span>
+        </div>
+        <div class="stroke-panel" id="strokePanel"></div>
+      </div>
+    </div>
+    <div>
+      <div class="section-label">Canvas Size</div>
+      <div class="size-options" id="pcSizeOptions"></div>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="section-label" style="margin-bottom:8px">Hand</div>
+      <div class="hand-toggle">
+        <button class="hand-btn active" id="pcBtnRight">Right</button>
+        <button class="hand-btn" id="pcBtnLeft">Left</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CANVAS -->
+  <div class="canvas-wrap" id="canvasWrap">
+    <canvas id="mainCanvas"></canvas>
+    <div class="panel-overlay" id="panelOverlay"></div>
+
+    <!-- MOBILE PANELS -->
+    <div class="mobile-panel" id="panelColor">
+      <div class="panel-handle"></div>
+      <div class="section-label" style="margin-bottom:10px">Color</div>
+      <div class="mobile-palette-wrap" id="mobilePalette"></div>
+    </div>
+
+    <div class="mobile-panel" id="panelStroke">
+      <div class="panel-handle"></div>
+      <div class="section-label" style="margin-bottom:6px">Stroke</div>
+      <div class="mobile-stroke-list" id="mobileStrokeList"></div>
+    </div>
+
+    <div class="mobile-panel" id="panelSize">
+      <div class="panel-handle"></div>
+      <div class="section-label" style="margin-bottom:10px">Canvas Size</div>
+      <div class="mobile-size-list" id="mobileSizeList"></div>
+    </div>
+
+    <div class="mobile-panel" id="panelSettings">
+      <div class="panel-handle"></div>
+      <div class="settings-row">
+        <div class="settings-label">Hand</div>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="mBtnRight">✋ Right</button>
+          <button class="toggle-btn" id="mBtnLeft">🤚 Left</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app-body -->
+
+<!-- MOBILE TAB BAR -->
+<div class="tab-bar">
+  <div class="tab-bar-inner">
+    <button class="tab-btn" data-panel="panelColor" id="tabColor">
+      <div class="tab-color-dot" id="tabColorDot"></div>
+      <span class="tab-label">Color</span>
+    </button>
+    <button class="tab-btn" data-panel="panelStroke" id="tabStroke">
+      <span class="tab-icon">✏️</span>
+      <span class="tab-label">Stroke</span>
+    </button>
+    <button class="tab-btn" data-panel="panelSize" id="tabSize">
+      <span class="tab-icon">📐</span>
+      <span class="tab-label">Size</span>
+    </button>
+    <button class="tab-btn" data-panel="panelSettings" id="tabSettings">
+      <span class="tab-icon">⚙️</span>
+      <span class="tab-label">Settings</span>
+    </button>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

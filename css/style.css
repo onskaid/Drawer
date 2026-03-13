@@ -52,6 +52,12 @@ header {
   text-transform: uppercase;
   color: var(--text);
 }
+.tagline {
+  font-size: 9px;
+  letter-spacing: .08em;
+  color: var(--text-m);
+  margin-top: 2px;
+}
 .header-right { display: flex; gap: 8px; align-items: center; }
 
 .size-badge {

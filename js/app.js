@@ -104,12 +104,13 @@ let displayScale = 1.0;
 
 function fitCanvas() {
   const wrap = document.getElementById('canvasWrap');
-  // キャンバスが wrap に収まる最大スケール（1.0を上限としない → zoomで拡大可能）
   const baseScale = Math.min(wrap.clientWidth / canvas.width, wrap.clientHeight / canvas.height);
   displayScale = baseScale * zoomScale;
-  // transform ではなく width/height で設定（比率崩れを防ぐ）
-  canvas.style.width  = Math.round(canvas.width  * displayScale) + 'px';
-  canvas.style.height = Math.round(canvas.height * displayScale) + 'px';
+  // 同じ displayScale から縦横を計算することで比率崩れを防ぐ
+  const dispW = Math.floor(canvas.width  * displayScale);
+  const dispH = Math.floor(canvas.width  * displayScale * (canvas.height / canvas.width));
+  canvas.style.width  = dispW + 'px';
+  canvas.style.height = dispH + 'px';
   canvas.style.transform = '';
   updateZoomBadge();
 }

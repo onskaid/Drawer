@@ -53,9 +53,9 @@ const columns = [
 // CANVAS SIZES
 // ═══════════════════════════════════════════════
 const SIZES = [
-  { key: 'S', label: 'S', desc: 'Instagram / X',   w: 1080, h: 1080, aspect: [1, 1] },
-  { key: 'M', label: 'M', desc: 'Instagram 4:5',   w: 1080, h: 1350, aspect: [4, 5] },
-  { key: 'L', label: 'L', desc: 'Stories / Reels', w: 1080, h: 1920, aspect: [9, 16] },
+  { key: 'S', label: 'S', desc: 'Instagram / X',   w: 600,  h: 600,  aspect: [1, 1] },
+  { key: 'M', label: 'M', desc: 'Instagram 4:5',   w: 600,  h: 750,  aspect: [4, 5] },
+  { key: 'L', label: 'L', desc: 'Stories / Reels', w: 600,  h: 1067, aspect: [9, 16] },
 ];
 let currentSizeKey = 'S';
 
@@ -70,7 +70,7 @@ let lastX = 0, lastY = 0, lastMidX = 0, lastMidY = 0;
 // ピンチズーム
 let zoomScale = 1.0;
 const ZOOM_MIN = 0.5;
-const ZOOM_MAX = 2.0;
+const ZOOM_MAX = 3.0;
 let pinchStartDist = 0;
 let pinchStartScale = 1.0;
 
@@ -99,12 +99,18 @@ function initCanvas(w, h) {
   document.getElementById('sizeBadge').textContent = w + ' × ' + h;
 }
 
+// 表示スケール（getPos と fitCanvas で共有）
+let displayScale = 1.0;
+
 function fitCanvas() {
   const wrap = document.getElementById('canvasWrap');
-  const basScale = Math.min(wrap.clientWidth / canvas.width, wrap.clientHeight / canvas.height, 1);
-  const totalScale = basScale * zoomScale;
-  canvas.style.width  = Math.floor(canvas.width  * totalScale) + 'px';
-  canvas.style.height = Math.floor(canvas.height * totalScale) + 'px';
+  // キャンバスが wrap に収まる最大スケール（1.0を上限としない → zoomで拡大可能）
+  const baseScale = Math.min(wrap.clientWidth / canvas.width, wrap.clientHeight / canvas.height);
+  displayScale = baseScale * zoomScale;
+  // transform ではなく width/height で設定（比率崩れを防ぐ）
+  canvas.style.width  = Math.round(canvas.width  * displayScale) + 'px';
+  canvas.style.height = Math.round(canvas.height * displayScale) + 'px';
+  canvas.style.transform = '';
   updateZoomBadge();
 }
 
@@ -318,6 +324,7 @@ document.getElementById('panelOverlay').addEventListener('click', closePanel);
 // ═══════════════════════════════════════════════
 function getPos(e) {
   const r  = canvas.getBoundingClientRect();
+  // getBoundingClientRect の実サイズ → canvas のピクセル座標に変換
   const sx = canvas.width  / r.width;
   const sy = canvas.height / r.height;
   const src = e.touches ? e.touches[0] : e;

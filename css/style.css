@@ -265,8 +265,10 @@ header {
   cursor: crosshair;
   touch-action: none;
   box-shadow: 0 2px 28px rgba(0,0,0,.09), 0 0 0 1px var(--border);
-  max-width: 100%;
-  max-height: 100%;
+  max-width: none;
+  max-height: none;
+  /* ブラウザによる比率の勝手な補正を防ぐ */
+  object-fit: none;
 }
 
 /* ═══════════════════════════════

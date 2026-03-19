@@ -106,10 +106,12 @@ function fitCanvas() {
   const wrap = document.getElementById('canvasWrap');
   const baseScale = Math.min(wrap.clientWidth / canvas.width, wrap.clientHeight / canvas.height);
   displayScale = baseScale * zoomScale;
-  // 縦横ともに同じ displayScale を掛けるだけ。丸め処理なし。
-  canvas.style.width  = (canvas.width  * displayScale) + 'px';
-  canvas.style.height = (canvas.height * displayScale) + 'px';
-  canvas.style.transform = '';
+  // transform: scale で canvas ごと拡大縮小 → 描画内容も一緒に拡大される
+  // width/height は canvas の実ピクセルサイズのまま固定
+  canvas.style.width  = canvas.width  + 'px';
+  canvas.style.height = canvas.height + 'px';
+  canvas.style.transform = 'scale(' + displayScale + ')';
+  canvas.style.transformOrigin = '50% 50%';
   updateZoomBadge();
 }
 
